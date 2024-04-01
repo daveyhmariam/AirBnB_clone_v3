@@ -10,7 +10,14 @@ from models import place, storage, user
 from models import city
 
 
+@app_view.route('/cities/<id>/places', methods=['GET'], strict_slashes=False)
+def list_places(id):
+    if storage.get(city.City, id):
+        city1 = storage.get(city.City, id)
+    else:
+        abort(404)
 
+    return jsonify([obj.to_dict() for obj in city1.places])
 
 
 @app_view.route('/places/<id>', strict_slashes=False)
