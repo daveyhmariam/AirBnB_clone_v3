@@ -70,10 +70,11 @@ def update_user(id):
         obj_dict = request.get_json()
     except Exception:
         return make_response({'error': 'Not a JSON'}, 400)
-    
+
     if 'password' in obj_dict.keys():
         hash_pass = hashlib.md5()
-        obj_dict['password'] = hash_pass.update(obj_dict['password'].encode('utf-8'))
+        obj_dict['password'] = hash_pass.update(
+            obj_dict['password'].encode('utf-8'))
 
     for key, value in obj_dict.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
