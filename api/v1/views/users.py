@@ -7,6 +7,7 @@ in a Flask API.
 from api.v1.views import app_view
 from flask import abort, request, jsonify, make_response
 from models import storage, user
+import hashlib
 
 
 @app_view.route('/users', strict_slashes=False)
@@ -50,6 +51,9 @@ def create_user():
     elif 'password' not in obj.keys():
         return make_response(jsonify({'error': 'Missing password'}), 400)
 
+    hash_pass = hashlib.md5()
+    obj['password'] = hash_pass.update(obj['password'].encode('utf-8'))
+
     new_user = user.User(**obj)
     new_user.save()
     return jsonify(new_user.to_dict()), 201
@@ -66,6 +70,10 @@ def update_user(id):
         obj_dict = request.get_json()
     except Exception:
         return make_response({'error': 'Not a JSON'}, 400)
+    
+    if 'password' in obj_dict.keys():
+        hash_pass = hashlib.md5()
+        obj_dict['password'] = hash_pass.update(obj_dict['password'].encode('utf-8'))
 
     for key, value in obj_dict.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
