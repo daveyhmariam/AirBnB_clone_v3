@@ -51,8 +51,8 @@ def create_user():
     elif 'password' not in obj.keys():
         return make_response(jsonify({'error': 'Missing password'}), 400)
 
-    hash_pass = hashlib.md5()
-    obj['password'] = hash_pass.update(obj['password'].encode('utf-8'))
+    hash_pass = hashlib.md5(obj['password'].encode())
+    obj['password'] = hash_pass.hexdigest()
 
     new_user = user.User(**obj)
     new_user.save()
@@ -72,9 +72,8 @@ def update_user(id):
         return make_response({'error': 'Not a JSON'}, 400)
 
     if 'password' in obj_dict.keys():
-        hash_pass = hashlib.md5()
-        obj_dict['password'] = hash_pass.update(
-            obj_dict['password'].encode('utf-8'))
+        hash_pass = hashlib.md5(obj_dict['password'].encode())
+        obj_dict['password'] = hash_pass.hexdigest()
 
     for key, value in obj_dict.items():
         if key not in ['id', 'email', 'created_at', 'updated_at']:
