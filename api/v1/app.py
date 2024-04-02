@@ -28,9 +28,6 @@ def handler(e):
 
 
 if __name__ == '__main__':
-    host = os.getenv('HBNB_API_HOST')
-    port = os.getenv('HBNB_API_PORT')
-
-    host = host if host else '0.0.0.0'
-    port = int(port) if port else 5000
-    app.run(host=host, port=port, threaded=True)
+    app.run(os.getenv('HBNB_API_HOST') or '0.0.0.0',
+            os.getenv('HBNB_API_PORT') or 5000,
+            threaded=True)
